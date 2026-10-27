@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ekechi Nzewi · Portfolio</title>
+<meta name="description" content="Ekechi Nzewi: computer vision and machine learning researcher. Two-time CMU Robotics Institute Summer Scholar, with projects in robotics, ML, games, and web.">
+<meta name="author" content="Ekechi Nzewi">
+<link rel="canonical" href="https://ezranz.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ekechi Nzewi · Portfolio">
+<meta property="og:description" content="Ekechi Nzewi: computer vision and machine learning researcher. Two-time CMU Robotics Institute Summer Scholar, with projects in robotics, ML, games, and web.">
+<meta property="og:url" content="https://ezranz.github.io/">
+<meta property="og:image" content="https://ezranz.github.io/assets/apple-detections.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='7' width='26' height='22' fill='none' stroke='%23D3204F' stroke-width='3'/%3E%3Crect x='3' y='2' width='14' height='7' fill='%23D3204F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column with a sticky section index on wide screens; detection-box annotations mark headings and figures. */
+:root {
+  --bg: #F1F3F0;
+  --surface: #FFFFFF;
+  --ink: #14202B;
+  --muted: #56636C;
+  --rule: #D5DBD6;
+  --box: #D3204F;      /* annotation / bounding-box */
+  --leaf: #2E7A4C;     /* segmentation mask */
+  --chip: #E6EBE6;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E151B; --surface: #151F27; --ink: #E3E9E5; --muted: #95A3AB;
+    --rule: #26333D; --box: #FF5C88; --leaf: #63C98C; --chip: #1C2932; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E151B; --surface: #151F27; --ink: #E3E9E5; --muted: #95A3AB;
+  --rule: #26333D; --box: #FF5C88; --leaf: #63C98C; --chip: #1C2932; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 16.5px; line-height: 1.6;
+  font-variation-settings: "wdth" 100;
+}
+a { color: inherit; text-decoration-color: var(--box); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--box); outline-offset: 3px; }
+
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- top bar ---------- */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.mark { font-family: var(--mono); font-size: 13px; letter-spacing: .02em; text-decoration: none; }
+.mark b { color: var(--box); font-weight: 500; }
+.top nav { display: flex; gap: 18px; flex-wrap: wrap; font-family: var(--mono); font-size: 12.5px; text-transform: lowercase; }
+.top nav a { text-decoration: none; color: var(--muted); }
+.top nav a:hover { color: var(--ink); }
+@media (max-width: 720px) { .top nav { display: none; } }
+
+/* ---------- hero ---------- */
+.hero { padding-block: 72px 56px; }
+.hero .wrap { display: grid; gap: 28px; }
+.eyebrow { font-family: var(--mono); font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.bbox { position: relative; display: inline-block; justify-self: start; padding: 10px 18px 6px; }
+.bbox::before {
+  content: ""; position: absolute; inset: 0; border: 2px solid var(--box);
+}
+.bbox .tag {
+  position: absolute; left: -2px; bottom: 100%;
+  background: var(--box); color: var(--bg);
+  font-family: var(--mono); font-size: 12px; font-weight: 500; padding: 2px 8px; white-space: nowrap;
+}
+h1 {
+  margin: 0; font-family: var(--display); font-weight: 850;
+  font-variation-settings: "wdth" 118;
+  font-size: clamp(44px, 9vw, 112px); line-height: .92; letter-spacing: -.02em;
+  text-wrap: balance;
+}
+.lede { max-width: 62ch; font-size: clamp(18px, 2.1vw, 21px); line-height: 1.5; margin: 0; }
+.lede strong { font-weight: 650; }
+.facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin-top: 12px;
+}
+.fact { padding: 16px 18px 16px 0; display: grid; gap: 2px; }
+.fact + .fact { border-left: 1px solid var(--rule); padding-left: 18px; }
+@media (max-width: 640px) { .fact + .fact { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); } }
+.fact .n { font-family: var(--display); font-variation-settings: "wdth" 112; font-weight: 800; font-size: 30px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.fact .l { color: var(--muted); font-size: 14px; }
+.links { display: flex; flex-wrap: wrap; gap: 10px 22px; font-family: var(--mono); font-size: 13.5px; }
+
+/* ---------- body layout ---------- */
+.layout { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 56px; padding-block: 24px 96px; }
+.index { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 72px); align-self: start; font-family: var(--mono); font-size: 12.5px; display: grid; gap: 8px; }
+.index a { text-decoration: none; color: var(--muted); display: flex; gap: 10px; }
+.index a span { color: var(--box); }
+.index a:hover { color: var(--ink); }
+@media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); gap: 0; } .index { display: none; } }
+
+section { padding-top: 40px; scroll-margin-top: 70px; }
+section + section { margin-top: 40px; border-top: 1px solid var(--rule); }
+h2 {
+  font-family: var(--display); font-variation-settings: "wdth" 112; font-weight: 800;
+  font-size: clamp(28px, 4vw, 40px); line-height: 1.05; margin: 0 0 6px; letter-spacing: -.01em; text-wrap: balance;
+}
+.sub { color: var(--muted); margin: 0 0 32px; max-width: 62ch; }
+h3 { font-family: var(--display); font-variation-settings: "wdth" 104; font-weight: 700; font-size: 21px; line-height: 1.25; margin: 0; text-wrap: balance; }
+
+.meta { font-family: var(--mono); font-size: 12.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.meta .org { color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; list-style: none; }
+.chips li { font-family: var(--mono); font-size: 12px; background: var(--chip); padding: 3px 8px; border-radius: 3px; }
+ul.pts { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; max-width: 68ch; }
+ul.pts li::marker { color: var(--box); }
+.num { font-variant-numeric: tabular-nums; font-weight: 650; }
+
+/* research entries */
+.entry { display: grid; gap: 14px; }
+.entry + .entry { margin-top: 44px; }
+.entry.with-fig { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); column-gap: 32px; align-items: start; }
+.entry.with-fig > .txt { display: grid; gap: 14px; min-width: 0; }
+@media (max-width: 760px) { .entry.with-fig { grid-template-columns: minmax(0, 1fr); row-gap: 18px; } }
+figure { margin: 0; display: grid; gap: 8px; }
+.frame { position: relative; border: 2px solid var(--box); background: #000; }
+.frame img { display: block; width: 100%; height: auto; }
+.frame .tag { position: absolute; left: -2px; top: -22px; background: var(--box); color: var(--bg); font-family: var(--mono); font-size: 11.5px; padding: 2px 7px; }
+.frame.leaf { border-color: var(--leaf); }
+.frame.leaf .tag { background: var(--leaf); }
+figcaption { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+
+.cs-table { overflow-x: auto; }
+.cs-table table { border-collapse: collapse; font-size: 14px; min-width: 380px; }
+.cs-table th, .cs-table td { text-align: left; padding: 6px 16px 6px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.cs-table th { font-family: var(--mono); font-size: 11.5px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.cs-table td:first-child { font-family: var(--mono); font-weight: 500; }
+
+/* projects */
+.proj-feature { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.card { background: var(--surface); border: 1px solid var(--rule); padding: 22px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.card p { margin: 0; }
+.status { font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--leaf); }
+.status.done { color: var(--muted); }
+.proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0; margin-top: 36px; border-top: 1px solid var(--rule); }
+.mini { padding: 20px 20px 20px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 8px; align-content: start; min-width: 0; }
+.mini h3 { font-size: 18px; }
+.mini p { margin: 0; color: var(--muted); font-size: 15px; }
+.kicker { font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 40px 0 0; }
+
+.card.wide { grid-column: 1 / -1; }
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 6px 28px; }
+/* pubs */
+ol.pubs { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; max-width: 74ch; }
+ol.pubs li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; }
+ol.pubs .yr { font-family: var(--mono); font-size: 13px; color: var(--box); padding-top: 2px; }
+ol.pubs .t { font-weight: 650; }
+ol.pubs .v { color: var(--muted); font-size: 15px; }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+.skills h3 { font-size: 15px; font-family: var(--mono); font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 10px; }
+
+/* education */
+.edu { display: grid; gap: 20px; }
+.edu-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 24px; align-items: baseline; }
+.edu-row .when { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+@media (max-width: 560px) { .edu-row { grid-template-columns: minmax(0, 1fr); } }
+
+/* contact */
+.contact { display: grid; gap: 18px; }
+.contact-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.email { font-family: var(--display); font-variation-settings: "wdth" 110; font-weight: 750; font-size: clamp(22px, 4vw, 34px); user-select: all; overflow-wrap: anywhere; }
+button.copy {
+  font-family: var(--mono); font-size: 12.5px; background: transparent; color: var(--ink);
+  border: 1.5px solid var(--box); padding: 6px 12px; cursor: pointer;
+}
+button.copy:hover { background: var(--box); color: var(--bg); }
+footer { border-top: 1px solid var(--rule); padding-block: 22px 36px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top">ekechi_nzewi <b>·</b> portfolio</a>
+    <nav aria-label="Sections">
+      <a href="#research">research</a><a href="#projects">projects</a><a href="#publications">publications</a><a href="#skills">skills</a><a href="#contact">contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Computer vision · Machine learning · Software</p>
+      <div class="bbox"><span class="tag">person: engineer 0.99</span><h1>Ekechi Nzewi</h1></div>
+      <p class="lede">I build systems that see and measure things. Two summers as a <strong>Robotics Institute Summer Scholar at Carnegie Mellon</strong>, working on perception for a robotic apple harvester and real-time leaf segmentation. Before that, undergraduate research in machine learning and computational neuroscience. Now finishing a B.S. in Information Technology at Georgia Gwinnett College.</p>
+      <div class="facts">
+        <div class="fact"><span class="n">2×</span><span class="l">CMU Robotics Institute Summer Scholar</span></div>
+        <div class="fact"><span class="n">16×</span><span class="l">faster leaf segmentation (4 s → 0.25 s)</span></div>
+        <div class="fact"><span class="n">4</span><span class="l">papers &amp; posters, incl. CNS*2022 Melbourne</span></div>
+        <div class="fact"><span class="n">6</span><span class="l">simulated robots: localization, planning, exploration</span></div>
+      </div>
+      <div class="links">
+        <a href="https://linkedin.com/in/ekechinzewi" target="_blank" rel="noopener">linkedin.com/in/ekechinzewi ↗</a>
+        <a href="https://github.com/ezranz" target="_blank" rel="noopener">github.com/ezranz ↗</a>
+        <span>Atlanta, GA</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap layout">
+    <nav class="index" aria-label="On this page">
+      <a href="#research"><span>01</span>Research</a>
+      <a href="#projects"><span>02</span>Projects</a>
+      <a href="#publications"><span>03</span>Publications</a>
+      <a href="#skills"><span>04</span>Skills</a>
+      <a href="#education"><span>05</span>Education</a>
+      <a href="#contact"><span>06</span>Contact</a>
+    </nav>
+
+    <div>
+      <!-- RESEARCH -->
+      <section id="research" style="padding-top:8px">
+        <h2>Research</h2>
+        <p class="sub">Four projects across robotics, computer vision, education data, and neuroscience, 2021 to 2023.</p>
+
+        <article class="entry with-fig">
+          <div class="txt">
+            <div class="meta"><span class="org">Carnegie Mellon University, Robotics Institute</span><span>Summer 2023</span><span>Advisors: G. Kantor, A. Silwal</span></div>
+            <h3>Leaf Size Analysis with Computer Vision</h3>
+            <ul class="chips"><li>Python</li><li>OpenCV</li><li>scikit-learn</li><li>NumPy</li></ul>
+            <ul class="pts">
+              <li>Built a near-real-time leaf segmentation loop (camera capture → SVM pixel classification → mask overlay) as a non-destructive alternative to measuring plants by hand.</li>
+              <li>Cut prediction time <span class="num">16×</span> (about 4 s to 0.25 s) by downsampling frames and limiting inference to a circular region of interest, bringing capture plus prediction under one second.</li>
+              <li>Trained RBF-kernel SVMs in three color spaces. All scored 0.99 on held-out pixels, but live testing told them apart:</li>
+            </ul>
+            <div class="cs-table">
+              <table>
+                <thead><tr><th>Space</th><th>Test acc.</th><th>Live behaviour</th></tr></thead>
+                <tbody>
+                  <tr><td>RGB</td><td class="num">0.99</td><td>Strongest overall</td></tr>
+                  <tr><td>LAB</td><td class="num">0.99</td><td>Most robust to overexposure</td></tr>
+                  <tr><td>HSV</td><td class="num">0.99</td><td>Failed on shadows</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <figure>
+            <div class="frame leaf"><span class="tag">roi: circular mask</span><img loading="lazy" width="800" height="450" alt="Camera frame cropped to a circular region of interest, with leaves on a grey table" src="assets/leaf-roi.jpg"></div>
+            <figcaption>A capture frame with the circular region of interest. Restricting inference to this region was half of the 16× speed-up.</figcaption>
+          </figure>
+        </article>
+
+        <article class="entry with-fig">
+          <div class="txt">
+            <div class="meta"><span class="org">Carnegie Mellon University, Robotics Institute</span><span>Summer 2022</span><span>Advisors: G. Kantor, A. Silwal</span></div>
+            <h3>Object Detection &amp; Mapping for a Robotic Apple Harvester</h3>
+            <ul class="chips"><li>PyTorch</li><li>YOLOv5</li><li>Mask R-CNN</li><li>ROS</li><li>Stereo depth</li></ul>
+            <ul class="pts">
+              <li>Trained YOLOv5 (small and medium) and Mask R-CNN apple detectors on orchard images, replacing hand-labeled frames in the harvester's perception pipeline.</li>
+              <li>Traced overfitting (mAP above <span class="num">0.8</span>, poor results on unseen data) to near-duplicate training frames. Rebuilt the training set by random sampling across the whole dataset, trading mAP (about <span class="num">0.7</span>) for much better generalization.</li>
+              <li>Wrote the data tooling: CSV-to-YOLO label conversion, an 80/10/10 train/val/test split, and prediction overlays.</li>
+              <li>Deployed the detector as a ROS node feeding bounding boxes into a stereo depth pipeline, then translated each apple's position into the harvester's reference frame so the arm could reach it.</li>
+            </ul>
+          </div>
+          <figure>
+            <div class="frame"><span class="tag">yolov5: apple</span><img loading="lazy" width="1100" height="825" alt="Night-time orchard image with dozens of red bounding boxes labelled apple with confidence scores between 0.8 and 0.93" src="assets/apple-detections.jpg"></div>
+            <figcaption>Detector output on a night-time orchard test frame. Most apples are found with confidence between 0.80 and 0.93.</figcaption>
+          </figure>
+        </article>
+
+        <article class="entry">
+          <div class="meta"><span class="org">Georgia Gwinnett College</span><span>Fall 2021</span><span>Advisor: Dr. Dan Pinzon</span></div>
+          <h3>Predicting Math Ability from Early Childhood Data</h3>
+          <ul class="chips"><li>Python</li><li>pandas</li><li>scikit-learn</li><li>Jupyter</li></ul>
+          <ul class="pts">
+            <li>Predicted 5th- and 8th-grade math proficiency (high, middle, low) from early test scores, family income, parental education, and home computer use in the NCES ECLS-K longitudinal study of <span class="num">21,000+</span> children.</li>
+            <li>Scaled the pipeline from a 124-variable extract to the full <span class="num">18,928</span>-variable file: dropped columns over 50% missing, removed later-grade variables to prevent target leakage, and filled gaps with iterative imputation.</li>
+            <li>Balanced classes by undersampling and compared 7 classifiers with 7-fold stratified cross-validation. An SVM reached <span class="num">58%</span> on the 3-class 8th-grade task, against 33% chance.</li>
+          </ul>
+        </article>
+
+        <article class="entry">
+          <div class="meta"><span class="org">Georgia Gwinnett College</span><span>2022</span><span>Advisor: Dr. Cengiz Günay</span></div>
+          <h3>Mini EPSC Analysis for a <i>Drosophila</i> Motor Circuit Model</h3>
+          <ul class="chips"><li>MATLAB</li><li>Pandora toolbox</li><li>Signal processing</li></ul>
+          <ul class="pts">
+            <li>Wrote MATLAB scripts to detect spontaneous miniature EPSCs ("minis") in voltage-clamp recordings from the aCC motor neuron, comparing wild-type and bang-senseless seizure-mutant flies.</li>
+            <li>Band-pass filtered (20 Hz to 1 kHz) and normalized 5 recordings, compared 3 detection thresholds, and scaled amplitudes by cell capacitance (9 to 15 pF) to map results onto the model neuron.</li>
+            <li>Learned the Pandora toolbox with little onboarding and became the team's go-to for data-processing questions. Presented at CNS*2022 in Melbourne.</li>
+          </ul>
+        </article>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="projects">
+        <h2>Projects</h2>
+        <p class="sub">Robotics, hardware, games, machine learning, and web projects, from coursework to client builds.</p>
+
+        <div class="proj-feature">
+          <article class="card">
+            <span class="status done">Course projects · Spring 2024</span>
+            <h3>Robot Perception &amp; Planning</h3>
+            <div class="meta"><span class="org">Georgia Tech CS 3630</span><span>6 simulated robots</span></div>
+            <p>A semester of autonomy problems, each solved in Python and most run on simulated robots in Webots.</p>
+            <ul class="pts">
+              <li><b>Trash-sorting robot:</b> implemented discrete and Gaussian probability distributions from scratch to classify items and choose actions.</li>
+              <li><b>Stop-sign detection:</b> located signs with camera contours alone, then fused vision with LiDAR ranges.</li>
+              <li><b>Localization:</b> particle filters on a grid world and in a simulated maze.</li>
+              <li><b>Planning and exploration:</b> RRT path planning with path smoothing for a differential-drive robot, and frontier-based exploration of unknown maps driven by a state machine.</li>
+            </ul>
+            <ul class="chips"><li>Python</li><li>Webots</li><li>Particle filters</li><li>RRT</li><li>LiDAR</li></ul>
+          </article>
+          <article class="card">
+            <span class="status done">Shipped · Feb to Apr 2023</span>
+            <h3>Lane-Crossing Arcade Game for Android</h3>
+            <div class="meta"><span class="org">Georgia Tech CS 2340</span><span>6-person team</span></div>
+            <p>An Android game where the player hops across traffic lanes and a river of floating logs. Built over five sprints with UML domain, use case, and sequence diagrams.</p>
+            <ul class="pts">
+              <li>Built the start screen, configuration screen, and navigation between activities, then the core game board, entity classes, and tilemap.</li>
+              <li>Implemented scoring, vehicle and river collisions, remaining lives, and the win screen.</li>
+              <li>Wrote unit tests, fixed Checkstyle issues, and refactored code smells such as long methods. Second-most commits on the team.</li>
+            </ul>
+            <ul class="chips"><li>Java</li><li>Android</li><li>JUnit</li><li>UML</li></ul>
+          </article>
+          <article class="card wide">
+            <span class="status done">Semester project · Fall 2024</span>
+            <h3>LiDAR Lighthouse</h3>
+            <div class="meta"><span class="org">Georgia Tech, Prototyping Intelligent Devices</span><span>Solo build</span></div>
+            <p>A stationary robot that spins distance sensors to map the room around it. The goal was a 360° scan that a computer could turn into a map of the space.</p>
+            <div class="two-col">
+              <ul class="pts">
+                <li><b>First design:</b> a TF-Mini micro LiDAR on a pan-tilt bracket with two servos, for horizontal and vertical sweeps. The sensor and servos worked, but no enclosure I designed allowed movement on both axes, so I narrowed the scope to horizontal scanning.</li>
+                <li><b>Final design:</b> a continuously spinning "lighthouse" head adapted from an Instructables build. VL53L0X time-of-flight sensors ride on a 60 RPM N20 gear motor, and a 6-wire slip ring keeps the wiring from twisting.</li>
+              </ul>
+              <ul class="pts">
+                <li>Wired the power and drive electronics (MT3608 boost converter, MX1508 motor driver) to an Arduino Uno base station.</li>
+                <li>Wrote a Processing sketch that reads distances over serial and draws each sweep as a radar-style map. Fabricated the enclosure with 3D printing and laser cutting.</li>
+                <li>Earlier course labs covered ultrasonic ranging, gyroscope and accelerometer reads, differential ADC sampling, and Morse code output.</li>
+              </ul>
+            </div>
+            <ul class="chips"><li>Arduino C++</li><li>Processing</li><li>Time-of-flight sensors</li><li>3D printing</li><li>Laser cutting</li></ul>
+          </article>
+          <article class="card">
+            <span class="status done">Shipped · Jan to Apr 2025</span>
+            <h3>Easter Date Calculator</h3>
+            <div class="meta"><span class="org">Georgia Tech Junior Design</span><span>5-person client project</span></div>
+            <p>A public educational site that computes Julian, Gregorian, and Orthodox Easter dates and explains the Computus algorithm with generated animations. I was backend developer and database manager.</p>
+            <ul class="pts">
+              <li>Co-developed a <span class="num">28</span>-endpoint Flask REST API for the calculator, glossary, and forum, with session login and hashed passwords.</li>
+              <li>Designed the MongoDB document schema for users, posts, comments, and glossary entries; co-wrote the architecture and data storage sections of the design document.</li>
+            </ul>
+            <ul class="chips"><li>Python</li><li>Flask</li><li>MongoDB</li><li>React</li></ul>
+          </article>
+          <article class="card">
+            <span class="status">In progress</span>
+            <h3>EducatED Choice</h3>
+            <div class="meta"><span class="org">School-matching web app</span></div>
+            <p>Recommends Gwinnett County, GA schools to parents based on a survey filled out for each child.</p>
+            <ul class="pts">
+              <li>Built a multi-step Likert survey that turns answers into preference tags stored per child in Firestore.</li>
+              <li>Now developing the recommender over a <span class="num">141</span>-school U.S. News dataset.</li>
+            </ul>
+            <ul class="chips"><li>React</li><li>Firebase</li><li>Firestore</li></ul>
+          </article>
+          <article class="card">
+            <span class="status done">Team project · Spring 2025</span>
+            <h3>NBA All-Star Prediction</h3>
+            <div class="meta"><span class="org">Georgia Tech CS 4641 Machine Learning</span></div>
+            <p>Predicts whether an NBA player becomes an All-Star from rookie-contract stats, to help teams decide which young players to build around.</p>
+            <ul class="pts">
+              <li>Features cover each of a player's first four seasons (games, minutes, shooting percentages, rebounds, assists, steals, blocks, points) plus position and draft round.</li>
+              <li>Built and trained the team's models: random forest classifiers (200 trees, balanced class weights) for two targets. On a held-out set of 50 players they reached <span class="num">90%</span> accuracy for "All-Star within 4 years" and <span class="num">92%</span> for "ever an All-Star".</li>
+              <li>All-Star recall was 0.58 and 0.82, so most errors were missed stars. Feature-importance analysis showed which stats drove the predictions.</li>
+            </ul>
+            <ul class="chips"><li>Python</li><li>scikit-learn</li><li>pandas</li><li>Matplotlib</li></ul>
+          </article>
+          <article class="card">
+            <span class="status done">Solo project · Spring 2023</span>
+            <h3>Game Boy Advance Mining Game</h3>
+            <div class="meta"><span class="org">Georgia Tech CS 2261 Media Device Architecture</span></div>
+            <p>A game written in C that runs on Game Boy Advance hardware. The player is a miner who collects coins, attacks enemies, and finds the key that unlocks the exit door, with three lives.</p>
+            <ul class="pts">
+              <li>Built the scrolling tiled backgrounds and a collision map that decides where the miner can walk.</li>
+              <li>Drew sprites from a sprite sheet through object memory with DMA transfers, and added sound.</li>
+              <li>Implemented the start, instructions, pause, win, and lose screens as a state machine, built over four milestones.</li>
+            </ul>
+            <ul class="chips"><li>C</li><li>Game Boy Advance</li><li>DMA</li><li>Tile maps</li></ul>
+          </article>
+        </div>
+
+        <p class="kicker">More builds</p>
+        <div class="proj-grid">
+          <article class="mini">
+            <h3>Pet Health Management</h3>
+            <p>A Java desktop app in model-view-controller layers for pet owners: accounts, pet profiles, medical records, and vet appointments, backed by PostgreSQL and SQLite.</p>
+            <ul class="chips"><li>Java</li><li>PostgreSQL</li><li>SQLite</li></ul>
+          </article>
+          <article class="mini">
+            <h3>Airline fare prediction</h3>
+            <p>Led a team of two to build a model predicting U.S. domestic airfare between major cities.</p>
+            <ul class="chips"><li>Python</li><li>TensorFlow</li></ul>
+          </article>
+          <article class="mini">
+            <h3>Email spam filter</h3>
+            <p>A Naive Bayes classifier trained on the Enron email corpus, with word-level features and concordance search to inspect what drives spam predictions.</p>
+            <ul class="chips"><li>Python</li><li>NLTK</li></ul>
+          </article>
+          <article class="mini">
+            <h3>Text-based dungeon crawler</h3>
+            <p>Built with a team of four using the waterfall model, from UML design through a SQLite-backed game.</p>
+            <ul class="chips"><li>Java</li><li>UML</li><li>SQLite</li></ul>
+          </article>
+          <article class="mini">
+            <h3>Connect Four &amp; Hill Cipher</h3>
+            <p>A two-player Connect Four desktop game with win detection and alerts, and a MATLAB Hill cipher that encrypts phrases through matrix multiplication and decrypts with the modular inverse.</p>
+            <ul class="chips"><li>Java</li><li>MATLAB</li></ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- PUBLICATIONS -->
+      <section id="publications">
+        <h2>Publications &amp; presentations</h2>
+        <div style="height:22px" aria-hidden="true"></div>
+        <ol class="pubs">
+          <li><span class="yr">2023</span><div><div class="t">Leaf Size Analysis with Computer Vision</div><div class="v">E. Nzewi, G. Kantor, A. Silwal. Robotics Institute Summer Scholars paper, Carnegie Mellon University.</div></div></li>
+          <li><span class="yr">2022</span><div><div class="t">Mini EPSC Analysis of Synaptic Integration to Inform a Drosophila Motor Circuit Model</div><div class="v">P. Del Rio, E. Nzewi, C. Gebremeskel, C. Günay. Poster, 31st Annual Computational Neuroscience Meeting (CNS*2022), Melbourne, Australia.</div></div></li>
+          <li><span class="yr">2022</span><div><div class="t">Object Detection &amp; Mapping for a Robotic Harvester</div><div class="v">E. Nzewi, G. Kantor, A. Silwal. Robotics Institute Summer Scholars paper, Carnegie Mellon University.</div></div></li>
+          <li><span class="yr">2022</span><div><div class="t">Mini Excitatory Postsynaptic Current Analysis in Drosophila Motor Neurons</div><div class="v">E. Nzewi, C. Günay. Poster, STaRS student research symposium, Georgia Gwinnett College.</div></div></li>
+        </ol>
+      </section>
+
+      <!-- SKILLS -->
+      <section id="skills">
+        <h2>Skills</h2>
+        <div style="height:22px" aria-hidden="true"></div>
+        <div class="skills">
+          <div><h3>Languages</h3><ul class="chips"><li>Python</li><li>Java</li><li>C</li><li>JavaScript</li><li>SQL</li><li>MATLAB</li><li>R</li><li>Kotlin</li><li>LC-3 Assembly</li></ul></div>
+          <div><h3>ML &amp; vision</h3><ul class="chips"><li>PyTorch</li><li>YOLOv5</li><li>Mask R-CNN</li><li>scikit-learn</li><li>TensorFlow</li><li>OpenCV</li><li>pandas</li><li>NumPy</li><li>NLTK</li></ul></div>
+          <div><h3>Web &amp; data</h3><ul class="chips"><li>Flask</li><li>React</li><li>MongoDB</li><li>Firebase</li><li>PostgreSQL</li><li>SQLite</li><li>Android</li><li>Git</li></ul></div>
+          <div><h3>Robotics &amp; hardware</h3><ul class="chips"><li>ROS</li><li>Webots</li><li>Particle filters</li><li>RRT planning</li><li>Stereo depth</li><li>Arduino</li><li>LiDAR &amp; ultrasonic sensors</li><li>3D printing</li><li>Laser cutting</li></ul></div>
+        </div>
+      </section>
+
+      <!-- EDUCATION -->
+      <section id="education">
+        <h2>Education</h2>
+        <div style="height:22px" aria-hidden="true"></div>
+        <div class="edu">
+          <div class="edu-row"><h3>Georgia Gwinnett College, B.S. Information Technology</h3><span class="when">Expected May 2027</span></div>
+          <div class="edu-row"><div><h3>Georgia Institute of Technology, Computer Science coursework</h3><p style="margin:6px 0 0;color:var(--muted);font-size:15px;max-width:68ch">Data Structures &amp; Algorithms · Linear Algebra · Discrete Mathematics for CS · Objects &amp; Design · Computer Organization &amp; Programming · Computer Networking · Media Device Architecture · Natural Language Understanding · AI Ethics &amp; Society · Prototyping Intelligent Devices</p></div><span class="when">2022 to 2025</span></div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact">
+        <h2>Contact</h2>
+        <p class="sub">Open to roles and research in computer vision, machine learning, and software engineering.</p>
+        <div class="contact">
+          <div class="contact-row">
+            <span class="email" id="email">ekechi29@gmail.com</span>
+            <button class="copy" id="copy-email" type="button">Copy email</button>
+          </div>
+          <div class="links">
+            <a href="https://linkedin.com/in/ekechinzewi" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a href="https://github.com/ezranz" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<footer><div class="wrap">Ekechi Nzewi · Atlanta, GA · Updated October 2026</div></footer>
+
+<script>
+document.getElementById('copy-email').addEventListener('click', function () {
+  var btn = this, text = document.getElementById('email').textContent;
+  var done = function (msg) { btn.textContent = msg; setTimeout(function () { btn.textContent = 'Copy email'; }, 1800); };
+  var fallback = function () {
+    var r = document.createRange(); r.selectNodeContents(document.getElementById('email'));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done('Selected, press ⌘C');
+  };
+  try { navigator.clipboard.writeText(text).then(function () { done('Copied'); }, fallback); } catch (e) { fallback(); }
+});
+</script>
+
+</body>
+</html>
