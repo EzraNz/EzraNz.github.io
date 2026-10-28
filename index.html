@@ -171,6 +171,9 @@ figcaption { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
 
 .card.wide { grid-column: 1 / -1; }
 .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 6px 28px; }
+.shots { gap: 6px; }
+.shots img { display: block; width: 100%; height: auto; background: #000; image-rendering: pixelated; border: 1px solid var(--rule); }
+.shots-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 /* pubs */
 ol.pubs { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; max-width: 74ch; }
 ol.pubs li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; }
@@ -399,13 +402,21 @@ footer { border-top: 1px solid var(--rule); padding-block: 22px 36px; font-famil
           </article>
           <article class="card">
             <span class="status done">Solo project · Spring 2023</span>
-            <h3>Game Boy Advance Mining Game</h3>
-            <div class="meta"><span class="org">Georgia Tech, Media Device Architecture</span></div>
-            <p>A game written in C that runs on Game Boy Advance hardware. The player is a miner who collects coins, attacks enemies, and finds the key that unlocks the exit door, with three lives.</p>
+            <h3>Dungeon Explorer</h3>
+            <div class="meta"><span class="org">Georgia Tech, Media Device Architecture</span><span>Game Boy Advance</span></div>
+            <figure class="shots">
+              <img src="assets/gba-gameplay.jpg" width="720" height="480" loading="lazy" alt="Gameplay: the miner stands beside a crystal enemy, a ring of keys, and a gold coin, surrounded by dark boulders on green ground">
+              <div class="shots-row">
+                <img src="assets/gba-attack.jpg" width="720" height="480" loading="lazy" alt="The miner swings an axe at a skeleton, shown as a white crescent">
+                <img src="assets/gba-title.jpg" width="720" height="480" loading="lazy" alt="Title screen reading Dungeon Explorer over a purple cave, with Start and Select instructions">
+              </div>
+              <figcaption>Frames from my gameplay recording: collecting the key, an axe attack on a skeleton, and the title screen.</figcaption>
+            </figure>
+            <p>A top-down game written in C that runs on Game Boy Advance hardware. You play a miner who breaks rocks and fights skeletons and crystal creatures with an axe, collects coins, upgrades the axe, and finds the key that opens the exit door before running out of three lives.</p>
             <ul class="pts">
               <li>Built the scrolling tiled backgrounds and a collision map that decides where the miner can walk.</li>
               <li>Drew sprites from a sprite sheet through object memory with DMA transfers, and added sound.</li>
-              <li>Implemented the start, instructions, pause, win, and lose screens as a state machine, built over four milestones.</li>
+              <li>Implemented the start, instructions, pause, win ("You Escaped"), and lose ("You Died") screens as a state machine, built over four milestones.</li>
             </ul>
             <ul class="chips"><li>C</li><li>Game Boy Advance</li><li>DMA</li><li>Tile maps</li></ul>
           </article>
